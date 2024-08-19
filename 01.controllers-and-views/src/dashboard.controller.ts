@@ -1,18 +1,23 @@
-import { Controller, Get, Query, Render } from '@nestjs/common';
+import { Controller, Get, Logger, Query, Render } from '@nestjs/common';
 
 @Controller('dashboard')
 export class DashboardController {
+
+  private readonly logger = new Logger(DashboardController.name);
+
   constructor(){}
 
   @Get()
   @Render('index')
   index(@Query('texto') texto: string) {
+    this.logger.fatal(`Param informado: ${texto}`);
     return {principal: texto || '#SIMPLOU - Workshop Nestjs'}
   }
 
   @Get('all')
   @Render('all')
   listAll() {
+    this.logger.warn('Renderizando a página com todas as fotos')
     return {
       photos: [
         {

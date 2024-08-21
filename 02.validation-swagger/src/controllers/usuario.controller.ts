@@ -1,5 +1,5 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Query } from '@nestjs/common';
-import { ApiBody, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, DefaultValuePipe, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
+import { ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { UsuarioService } from 'src/services/usuario.service';
 
@@ -25,8 +25,8 @@ export class UsuarioController {
     type: PaginacaoResonse<UsuarioResponse>
   })
   async buscarUsuarioPaginado(
-    @Query('numeroPagina') numeroPagina?: number,
-    @Query('porPagina') porPagina: number = 30
+    @Query('numeroPagina', new DefaultValuePipe(0), ParseIntPipe) numeroPagina: number = 0,
+    @Query('porPagina', new DefaultValuePipe(30), ParseIntPipe) porPagina: number = 30
   ): Promise<PaginacaoResonse<UsuarioResponse>> {
     return await this.usuarioService.buscarUsuarioPaginada(numeroPagina, porPagina);
   }
@@ -37,7 +37,7 @@ export class UsuarioController {
     description: 'Retorno usuário encontrado pelo ID',
     type: UsuarioResponse
   })
-  async buscarUsuarioPorId(@Param('id') idUsuario: number): Promise<UsuarioResponse> {
+  async buscarUsuarioPorId(@Param('id', ParseIntPipe) idUsuario: number): Promise<UsuarioResponse> {
     return await this.usuarioService.buscarUsuarioPorId(idUsuario);
   }
 
@@ -59,14 +59,14 @@ export class UsuarioController {
     type: UsuarioResponse
   })
   async atualizarUsuarioPorId(
-    @Param('id') idUsuario: number,
+    @Param('id', ParseIntPipe) idUsuario: number,
     @Body() usuarioAtualizado: AtualizarUsuarioRequest): Promise<UsuarioResponse> {
     return this.usuarioService.atualizarUsuarioPorId(idUsuario, usuarioAtualizado)
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deletarUsuarioPorId(@Param('id') idUsuario: number) {
+  async deletarUsuarioPorId(@Param('id', ParseIntPipe) idUsuario: number) {
     await this.usuarioService.deletarUsuarioPorId(idUsuario);
   }
 }

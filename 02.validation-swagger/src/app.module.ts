@@ -1,10 +1,19 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { HttpModule } from '@nestjs/axios';
+
+import { UsuarioController } from './controllers/usuario.controller';
+import { UsuarioService } from './services/usuario.service';
+import { UserIntegrationService } from './integration/dummyjson/user.integration.service';
+
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    HttpModule
+  ],
+  controllers: [UsuarioController],
+  providers: [
+    UsuarioService,
+    UserIntegrationService,
+  ],
 })
 export class AppModule {}

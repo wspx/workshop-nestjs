@@ -1,3 +1,4 @@
+import { AtualizarUsuarioRequest } from "src/controllers/dto/requests/atualizar-usuario.request";
 import { CriarUsuarioRequest } from "src/controllers/dto/requests/criar-usuario.request";
 import { PaginacaoResonse } from "src/controllers/dto/responses/paginacao.response";
 import { UsuarioResponse } from "src/controllers/dto/responses/usuario.response";
@@ -5,6 +6,7 @@ import { GeneroUsuario } from "src/enums/genero-usuario.enum";
 import { PapelUsuario } from "src/enums/papel-usuario.enum";
 import { TipoSanguineo } from "src/enums/tipo-sanguineo.enum";
 import { CreateUserRequest } from "src/integration/dummyjson/dto/request/create-user.request";
+import { UpdateUserRequest } from "src/integration/dummyjson/dto/request/update-user.request";
 import { UserResponse } from "src/integration/dummyjson/dto/response/user.response";
 import { UserPaginationResponse } from "src/integration/dummyjson/dto/response/users-pagination.response";
 
@@ -66,6 +68,17 @@ export abstract class UsuarioConverter {
       role: novoUsuario.papelUsuario,
       weight: novoUsuario.peso,
       height: novoUsuario.altura
+    }
+  }
+
+  public static toAtualizarUsuarioRequest(usuarioAtualizado: AtualizarUsuarioRequest): UpdateUserRequest {
+    return {
+      email: usuarioAtualizado.email,
+      phone: usuarioAtualizado.telefone,
+      image: usuarioAtualizado.fotoPerfil,
+      role: usuarioAtualizado.papelUsuario,
+      weight: usuarioAtualizado.peso,
+      height: usuarioAtualizado.altura
     }
   }
 }

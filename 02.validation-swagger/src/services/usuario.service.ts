@@ -1,8 +1,11 @@
 import { Injectable } from "@nestjs/common";
 
+import { AtualizarUsuarioRequest } from "src/controllers/dto/requests/atualizar-usuario.request";
 import { CriarUsuarioRequest } from "src/controllers/dto/requests/criar-usuario.request";
-import { UsuarioConverter } from "src/converters/usuario.converter";
+
 import { UserIntegrationService } from "src/integration/dummyjson/user.integration.service";
+
+import { UsuarioConverter } from "src/converters/usuario.converter";
 
 @Injectable()
 export class UsuarioService {
@@ -27,9 +30,13 @@ export class UsuarioService {
     return UsuarioConverter.toUsuarioResponse(novoUsuarioIntegration);
   }
 
-  atualizarUsuarioPorId() {}
+  async atualizarUsuarioPorId(idUsuario: number, usuarioAtualizado: AtualizarUsuarioRequest) {
+    const atualizarUsuarioRequest = UsuarioConverter.toAtualizarUsuarioRequest(usuarioAtualizado);
+    const usuarioAtualizadoIntegration = await this.userIntegrationService.atualizarUsuarioPorId(idUsuario, atualizarUsuarioRequest);
+    return UsuarioConverter.toUsuarioResponse(usuarioAtualizadoIntegration);
+  }
 
-  deletarUsuarioPorId() {}
-
-  private verificarExistenciaUsuarioPorId() {}
+  async deletarUsuarioPorId(idUsuario: number) {
+    await this.userIntegrationService.deletarUsuarioPorId(idUsuario);
+  }
 }

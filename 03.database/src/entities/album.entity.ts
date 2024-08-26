@@ -1,11 +1,15 @@
-import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
+import { TrackEntity } from "./track.entity";
 
 @Entity({ name: 'albums' })
-export class AlbumsEntity {
-  
+export class AlbumEntity {
+
   @PrimaryColumn({ name: 'AlbumId' })
   id: number;
 
-  @Column({name: 'Title'})
+  @Column({ name: 'Title' })
   titulo: string;
+
+  @OneToMany(() => TrackEntity, track => track.album)
+  musicas: TrackEntity[];
 }

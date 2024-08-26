@@ -1,5 +1,7 @@
 import { Controller, Delete, Get, Post, Put } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Clientes')
 @Controller('/v1/clientes')
 export class ClientesController {
   constructor() { }

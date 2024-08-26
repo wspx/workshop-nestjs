@@ -1,36 +1,23 @@
 import { Module } from '@nestjs/common';
-
-import { AlbumsController } from './controllers/albums.controller';
-import { ClientesController } from './controllers/clientes.controller';
-
-import { AlbumsService } from './services/albums.service';
-import { ClientesService } from './services/clientes.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { dirname } from 'path';
-import { AlbumsEntity } from './entities/album.entity';
-import { DataSource } from 'typeorm';
+import { ClientesModule } from './modules/clientes/clientes.module';
+import { AlbumsModule } from './modules/albums/albums.module';
+import { join } from 'path';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'sqlite',
-      database: __dirname + '../chinook.db',
+      database: join(__dirname, '..', 'chinook.db'),
       autoLoadEntities: true,
-      // entities: [AlbumsEntity],
-      synchronize: true
-    })
+      logging: true
+    }),
+    AlbumsModule,
+    ClientesModule,
   ],
-  controllers: [
-    ClientesController,
-    AlbumsController,
-  ],
-  providers: [
-    AlbumsService,
-    ClientesService
-  ],
+  controllers: [],
+  providers: [],
 })
 export class AppModule { 
-  constructor(
-    private readonly dataSource: DataSource,
-  ) {}
+  constructor() {}
 }

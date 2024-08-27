@@ -59,6 +59,6 @@ export class AlbumsService {
       throw new NotFoundException(`Album ${idAlbum} não encontrado`);
     }
 
-    return MusicaConverter.entityToResponse(album.musicas);
+    return MusicaConverter.entitiesToResponse(album.musicas);
   }
 }

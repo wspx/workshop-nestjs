@@ -5,6 +5,8 @@ import { PaginacaoClientesResponse } from './dto/response/paginacao-clientes.res
 import { ClienteResponse } from './dto/response/cliente.response';
 import { CriarClienteRequest } from './dto/request/criar-cliente.request';
 import { AtualizarClienteRequest } from './dto/request/atualizar-cliente.request';
+import { CompraResponse } from './dto/response/compra.response';
+import { CompraItemResponse } from './dto/response/compra-item.response';
 
 @ApiTags('Clientes')
 @Controller('/v1/clientes')
@@ -72,8 +74,24 @@ export class ClientesController {
   }
 
   @Get(':id/compras')
-  async encontrarTodasAsComprasCliente(idCliente: number) { }
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Retorna todas as compras feita por um cliente',
+    type: [CompraResponse]
+  })
+  async encontrarTodasAsComprasCliente(@Param('id', ParseIntPipe) idCliente: number) {
+    return await this.clientesService.encontrarTodasAsComprasCliente(idCliente);
+  }
 
   @Get(':id/compras/:idCompra')
-  async encontrarCompraPorIdPorCliente(idCliente: number) { }
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Retorna todos os itens de uma compra feita por um cliente',
+    type: [CompraItemResponse]
+  })
+  async encontrarCompraPorIdPorCliente(
+    @Param('id', ParseIntPipe) idCliente: number, 
+    @Param('idCompra', ParseIntPipe) idCompra: number) { 
+      return await this.clientesService.encontrarCompraPorIdPorCliente(idCliente, idCompra);
+    }
 }

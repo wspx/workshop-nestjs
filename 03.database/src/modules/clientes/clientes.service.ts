@@ -7,6 +7,9 @@ import { CustomerEntity } from "src/entities/customer.entity";
 import { ClienteConverter } from "./converters/cliente.converter";
 import { CriarClienteRequest } from "./dto/request/criar-cliente.request";
 import { AtualizarClienteRequest } from "./dto/request/atualizar-cliente.request";
+import { InvoiceEntity } from "src/entities/invoice.entity";
+import { CompraConverter } from "./converters/compra.converter";
+import { InvoiceItemEntity } from "src/entities/invoice-item.entity";
 
 @Injectable()
 export class ClientesService {
@@ -15,6 +18,8 @@ export class ClientesService {
 
   constructor(
     @InjectRepository(CustomerEntity) private readonly clienteRepository: Repository<CustomerEntity>,
+    @InjectRepository(InvoiceEntity) private readonly comprasRepository: Repository<InvoiceEntity>,
+    @InjectRepository(InvoiceItemEntity) private readonly comprasItemsRepository: Repository<InvoiceItemEntity>,
   ) { }
 
   async buscarTodosClientesPaginado(numeroPagina: number = 0, porPagina: number = 30) {
@@ -60,16 +65,56 @@ export class ClientesService {
   async excluirUsuarioPorId(idCliente: number) {
     this.logger.log(`EXCLUIR dados do cliente: ${idCliente}`);
 
-    let cliente = await this.clienteRepository.exists({ where: { id: idCliente } });
+    const cliente = await this.clienteRepository.exists({ where: { id: idCliente } });
     if (!cliente) {
       this.logger.warn(`O cliente ${idCliente} não foi encontrado`);
       throw new NotFoundException(`O cliente ${idCliente} não foi encontrado`);
     }
 
-    await this.clienteRepository.delete({id: idCliente});
+    await this.clienteRepository.delete({ id: idCliente });
   }
 
-  async encontrarTodasAsComprasCliente(idCliente: number) { }
+  async encontrarTodasAsComprasCliente(idCliente: number) {
+    const cliente = await this.clienteRepository.exists({ where: { id: idCliente } });
+    if (!cliente) {
+      this.logger.warn(`O cliente ${idCliente} não foi encontrado`);
+      throw new NotFoundException(`O cliente ${idCliente} não foi encontrado`);
+    }
 
-  async encontrarCompraPorIdPorCliente(idCliente: number) { }
+    const todasComprasUsuario = await this.comprasRepository.find({ where: { cliente: { id: idCliente } } })
+    return CompraConverter.entitiesToResponseList(todasComprasUsuario);
+  }
+
+  async encontrarCompraPorIdPorCliente(idCliente: number, idCompra: number) {
+    const cliente = await this.clienteRepository.exists({ where: { id: idCliente } });
+    if (!cliente) {
+      this.logger.warn(`O cliente ${idCliente} não foi encontrado`);
+      throw new NotFoundException(`O cliente ${idCliente} não foi encontrado`);
+    }
+
+    const compra = await this.comprasRepository.exists({ where: { id: idCompra } });
+    if (!compra) {
+      this.logger.warn(`A compra ${idCompra} não foi encontrado`);
+      throw new NotFoundException(`A compra ${idCompra} do cliente ${idCliente} não foi encontrado`);
+    }
+
+    const resultado = await this.comprasItemsRepository.find({
+      where: {
+        compra: {
+          id: idCompra,
+          cliente: {
+            id: idCliente
+          }
+        }
+      },
+      relations: {
+        compra: true,
+        musicas: {
+          album: true
+        }
+      }
+    });
+
+    return CompraConverter.entitiestoCompraResponseItem(resultado);
+  }
 }

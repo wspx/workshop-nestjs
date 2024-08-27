@@ -48,6 +48,7 @@ export abstract class ClienteConverter {
       telefone: criarClienteRequest.telefone,
       fax: criarClienteRequest.fax,
       email: criarClienteRequest.email,
+      compras: []
     }
   }
 

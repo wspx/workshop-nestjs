@@ -8,7 +8,7 @@ export class MusicaResponse {
   @ApiProperty()
   nome: string;
 
-  @ApiProperty({enum: TipoMidiaEnum, enumName: 'TipoMidiaEnum'})
+  @ApiProperty({ enum: TipoMidiaEnum, enumName: 'TipoMidiaEnum' })
   tipoMidia: TipoMidiaEnum;
 
   @ApiProperty()

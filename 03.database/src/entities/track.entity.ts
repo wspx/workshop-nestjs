@@ -1,6 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import { MediaTypeEnum } from "./media-type.enum";
 import { AlbumEntity } from "./album.entity";
+import { InvoiceItemEntity } from "./invoice-item.entity";
 
 @Entity({ name: 'tracks' })
 export class TrackEntity {
@@ -28,4 +29,8 @@ export class TrackEntity {
 
   @ManyToOne(() => AlbumEntity, album => album.musicas)
   album: AlbumEntity;
+
+  @ManyToOne(() => InvoiceItemEntity, invoiceItem => invoiceItem.musicas)
+  @JoinColumn({ name: 'TrackId' })
+  itemCompra: InvoiceItemEntity;
 }

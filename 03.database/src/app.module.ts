@@ -1,8 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ScheduleModule } from '@nestjs/schedule';
+
+import { join } from 'path';
+
 import { ClientesModule } from './modules/clientes/clientes.module';
 import { AlbumsModule } from './modules/albums/albums.module';
-import { join } from 'path';
+import { EstatisticasService } from './modules/clientes/estatisticas.service';
 
 @Module({
   imports: [
@@ -12,11 +16,12 @@ import { join } from 'path';
       autoLoadEntities: true,
       logging: true
     }),
+    ScheduleModule.forRoot(),
     AlbumsModule,
     ClientesModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [EstatisticasService],
 })
 export class AppModule { 
   constructor() {}

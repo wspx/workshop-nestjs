@@ -6,7 +6,8 @@ import { join } from 'path';
 
 import { ClientesModule } from './modules/clientes/clientes.module';
 import { AlbumsModule } from './modules/albums/albums.module';
-import { EstatisticasService } from './modules/clientes/estatisticas.service';
+import { EstatisticasService } from './estatisticas.service';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -20,7 +21,9 @@ import { EstatisticasService } from './modules/clientes/estatisticas.service';
     AlbumsModule,
     ClientesModule,
   ],
-  controllers: [],
+  controllers: [
+    AppController
+  ],
   providers: [EstatisticasService],
 })
 export class AppModule { 
